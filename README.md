@@ -65,3 +65,8 @@ Meskipun sistem koperasi berbasis blockchain menawarkan banyak potensi dan keunt
     Anggota dan pengurus koperasi dapat melihat laporan kinerja dan pertumbuhan koperasi dalam jangka waktu tertentu.
 
 
+# modules
+
+**Smart contract** dibuat dengan bantuan framework hardhat, masuk ke forlder hardhat untuk mendevelop, testing, dan delpoy smart contract ke jaringan blockkchain BSC, ETH, atbitrum, dan EVM based lainnya
+
+**Front end** dibuat dengan bantuan framewoek vue js, masuk ke folder front untuk mendeelop, testing, deploy dev server, dan create distributable package.
