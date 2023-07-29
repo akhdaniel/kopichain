@@ -67,6 +67,6 @@ Meskipun sistem koperasi berbasis blockchain menawarkan banyak potensi dan keunt
 
 # modules
 
-**Smart contract** dibuat dengan bantuan framework hardhat, masuk ke forlder hardhat untuk mendevelop, testing, dan delpoy smart contract ke jaringan blockkchain BSC, ETH, atbitrum, dan EVM based lainnya
+**Smart contract** dibuat dengan bahasa solidity dan bantuan framework hardhat. Masuk ke forlder **hardhat** untuk mendevelop, testing, dan delpoy smart contract ke jaringan blockkchain BSC, ETH, atbitrum, dan EVM based lainnya.
 
-**Front end** dibuat dengan bantuan framewoek vue js, masuk ke folder front untuk mendeelop, testing, deploy dev server, dan create distributable package.
+**Front end** dibuat dengan reactive javascript bantuan framework vuejs versi 3. Masuk ke folder **front** untuk mendevelop, testing, run dev server, dan create distributable package.
