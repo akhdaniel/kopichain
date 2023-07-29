@@ -1,11 +1,11 @@
-node_modules
-.env
-coverage
-coverage.json
-typechain
-typechain-types
-
-# Hardhat files
-cache
-artifacts
-
+/nbproject/
+/.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+node_modules/
+bin/
+obj/
+.vs/
