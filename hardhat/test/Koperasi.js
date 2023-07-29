@@ -44,6 +44,17 @@ Setelah penarikan berhasil, kami memverifikasi apakah saldo anggota telah berkur
 Pastikan Anda telah menjalankan smart contract Koperasi pada lingkungan pengujian menggunakan Hardhat sebelum menjalankan pengujian ini. Selain itu, pastikan fungsi withdrawSavings telah diimplementasikan dengan benar pada smart contract Koperasi untuk melakukan pengujian ini dengan sukses.
 
 
+-- request dan approval loan
+
+Kode di atas merupakan kelanjutan dari kode test sebelumnya untuk registrasi anggota baru, pengisian tabungan, dan pencairan tabungan pada smart contract Koperasi.
+Test case should submit loan application berfungsi untuk menguji fungsi submitLoanApplication pada smart contract Koperasi.
+Test case should approve loan application berfungsi untuk menguji fungsi approveLoan pada smart contract Koperasi.
+Pada test case should submit loan application, kami menentukan jumlah pinjaman dan durasi pinjaman yang diajukan dan memverifikasi bahwa pengajuan pinjaman berhasil.
+Pada test case should approve loan application, kami menyetujui pengajuan pinjaman yang telah diajukan sebelumnya menggunakan akun pemilik kontrak (owner) dan memverifikasi bahwa persetujuan berhasil dilakukan.
+Pastikan Anda telah menjalankan smart contract Koperasi pada lingkungan pengujian menggunakan Hardhat sebelum menjalankan pengujian ini. Selain itu, pastikan fungsi submitLoanApplication dan approveLoan telah diimplementasikan dengan benar pada smart contract Koperasi untuk melakukan pengujian ini dengan sukses.
+
+
+
 
 
 
@@ -62,6 +73,16 @@ describe("Koperasi", function() {
 
         koperasi = await Koperasi.deploy();
         await koperasi.deployed();
+
+        // Register member1 for the test
+        await koperasi.connect(member1).registerMember(
+            "John Doe",
+            "john.doe@example.com",
+            1234567890,
+            "123 Main Street, City",
+            20000101,
+            0
+        );
     });
 
     it("should register a new member", async function() {
@@ -116,5 +137,46 @@ describe("Koperasi", function() {
 
         const newBalance = await koperasi.getBalance(member1.address);
         expect(newBalance).to.equal(initialBalance.sub(withdrawAmount));
+    });
+
+
+    // Test case for loan application
+    it("should submit loan application", async function() {
+        const loanAmount = ethers.utils.parseEther("10.0"); // 10 ETH
+        const loanDuration = 12; // 12 bulan
+
+        const initialLoanApplications = await koperasi.getLoanApplicationsCount();
+
+        await koperasi.connect(member1).submitLoanApplication(loanAmount, loanDuration);
+
+        const newLoanApplications = await koperasi.getLoanApplicationsCount();
+        expect(newLoanApplications).to.equal(initialLoanApplications.add(1));
+
+        const loanApplication = await koperasi.getLoanApplication(newLoanApplications.sub(1));
+        expect(loanApplication.amount).to.equal(loanAmount);
+        expect(loanApplication.duration).to.equal(loanDuration);
+        expect(loanApplication.status).to.equal(0); // 0 for pending
+        expect(loanApplication.approvedBy).to.equal(address(0)); // 0 address for pending
+    });
+
+    // Test case for loan approval
+    it("should approve loan application", async function() {
+        const loanAmount = ethers.utils.parseEther("10.0"); // 10 ETH
+        const loanDuration = 12; // 12 bulan
+
+        // Submit loan application
+        await koperasi.connect(member1).submitLoanApplication(loanAmount, loanDuration);
+
+        const initialLoanApplications = await koperasi.getLoanApplicationsCount();
+
+        // Approve loan application by owner
+        await koperasi.connect(owner).approveLoan(initialLoanApplications.sub(1));
+
+        const newLoanApplications = await koperasi.getLoanApplicationsCount();
+        expect(newLoanApplications).to.equal(initialLoanApplications);
+
+        const loanApplication = await koperasi.getLoanApplication(initialLoanApplications.sub(1));
+        expect(loanApplication.status).to.equal(1); // 1 for approved
+        expect(loanApplication.approvedBy).to.equal(owner.address);
     });
 });
